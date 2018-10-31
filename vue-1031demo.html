@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-demo</title>
+    <script src="vue.min.js"></script>
+    <style>
+        *{
+            margin:0;padding:0;
+            /* font-size: 0; */
+        }
+        P{text-align: center;}
+        .input-w{
+            width: 1200px;
+            height: 35px;
+        }
+        .input-c{
+            width: 100px;
+            height: 40px;
+        }
+        h1{
+            font-size: 24px;
+            display: inline-block;
+            width:400px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+        }
+        .bg{
+            background-color: lightblue;
+          
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="mydiv">
+            <div class="bg"><h1>{{msg}}</h1><span>商品数量<b>{{lists.length}}</b></span></div>
+            
+            <hr>
+            <input type="text" class="input-w" placeholder="请输入商品名称" v-model="input">
+             <input type="button" class="input-c" value="提交" v-on:click="add(input)" >
+            <div>
+                    <table border="1">
+                       <tr>
+                           <th>商品名称</th>
+                           <th>状态</th>
+                           <th>备注</th>
+                       </tr>
+                       <tr v-for="(lists,index) in lists">
+                           <th>{{lists.name}}</th>
+                           <th>{{lists.state}}</th>
+                           <th><button v-on:click="del(index)">删除</button></th>
+                       </tr>
+                      
+                    </table>
+        
+            </div>
+            
+
+    </div>
+    <canvas id="canvas" width="120" height="40"></canvas>
+    <script>
+        
+        
+        window.onload=function(){
+            draw();
+            
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            canvas.onclick=function(){
+                context.clearRect(0,0,120,40);
+                draw();
+                
+            };
+            new Vue(
+                {
+                    el:".mydiv",
+                    data:{
+                        msg:"商品清单",
+                        input:"",
+                        arr:["第一：","第二：","第三：","第四："],
+                        count:0,
+                        lists:
+                            [
+                                {name:"手机",state:"未采购",},
+                                {name:"手机",state:"未采购",},
+                            ],
+                        
+                    },
+                    methods:{
+                        add:function(name){
+                            if(this.input=="") return;
+                            this.lists.unshift({name:name,state:"未采购",});
+                            this.input="";
+                        },
+                        del:function(index){
+                            this.lists.splice(index,1);
+                        }
+                    }
+                    
+                }
+            );
+        }
+        function getColor(){
+                var r=Math.floor(Math.random()*256);
+                var g=Math.floor(Math.random()*256);
+                var b=Math.floor(Math.random()*256);
+                // var r=g=b=255;
+                if(r==255&&g==255&b==255){
+                    return "black";
+
+                }
+                return "rgb("+r+','+g+','+b+")";
+            }
+        function draw(){
+            //生成随机颜色
+            
+            
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            context.strokeRect(0,0,120,40);
+            var sCode="A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,0,a,b,c,d,e,f,g,h,i,g,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
+            var aCode=sCode.split(",");
+            // console.log(aCode);
+            
+            // 生成随机数字
+            
+            for(var i=0;i<4;i++){
+                var x=20+20*i;
+                var y=20+Math.random()*10;
+                var index=Math.floor(Math.random()*aCode.length);
+                var s=aCode[index];
+                context.font="bold 20px 微软雅黑";
+                context.fillStyle=getColor();
+                var deg=80*Math.random()*Math.PI/180;
+                context.translate(x,y);
+                context.rotate(deg);
+                context.fillText(s,0,0);
+                context.rotate(-deg);
+                context.translate(-x,-y);
+               
+            } 
+
+            //生成随机干扰线
+            for(var i=0;i<8;i++){
+                context.beginPath();
+                context.moveTo(Math.random()*120,Math.random()*40);
+                context.lineTo(Math.random()*120,Math.random()*40);
+                context.strokeStyle=getColor();
+                context.stroke();
+            }
+            //生成随机干扰点
+            for(var i=0;i<28;i++){
+                context.beginPath();
+                var x=Math.random()*120;
+                var y=Math.random()*40;
+                context.moveTo(x,y);
+                context.lineTo(x+1,y+1);
+                context.strokeStyle=getColor();
+                context.stroke();
+            }
+            
+        }
+    </script>
+</body>
+</html>
